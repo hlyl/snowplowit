@@ -29,22 +29,22 @@ jobs:
     - name: Run FastAPI app
       run: |
         . venv/bin/activate
-        uvicorn main:app --host 0.0.0.0 --port 8000 &
+        uvicorn src.main:app --host 0.0.0.0 --port 8000 &
       env:
-        DATABASE_URL: "sqlite:///./test_db.sqlite"
+        DATABASE_URL: "sqlite:///./tests/test.db"
 
     - name: Run Streamlit app
       run: |
         . venv/bin/activate
-        streamlit run app.py &
+        streamlit run src/app.py &
       env:
-        DATABASE_URL: "sqlite:///./test_db.sqlite"
+        DATABASE_URL: "sqlite:///./tests/test.db"
 
     - name: Wait for services to be ready
       run: |
         sudo apt-get install -y wait-for-it
-        wait-for-it localhost:8000 --timeout=30
-        wait-for-it localhost:8501 --timeout=30
+        wait-for-it localhost:8000 --timeout=60
+        wait-for-it localhost:8501 --timeout=60
 
     - name: Run tests
       run: |
