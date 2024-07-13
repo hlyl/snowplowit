@@ -7,13 +7,23 @@ from fpdf import FPDF
 from datetime import datetime
 import json
 import logging
+import os
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+import os
+
+# Get the directory of the current script
+base_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Construct the full path to the config file
+config_path = os.path.join(base_dir, "config.json")
+
 # Load JSON configuration
-with open("config.json") as f:
+with open(config_path) as f:
+    # Load your configuration here
     config = json.load(f)
 
 app = FastAPI()
