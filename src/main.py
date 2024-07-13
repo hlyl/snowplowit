@@ -13,7 +13,6 @@ import os
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-import os
 
 # Get the directory of the current script
 base_dir = os.path.dirname(os.path.abspath(__file__))

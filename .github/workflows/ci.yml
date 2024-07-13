@@ -51,4 +51,4 @@ jobs:
     - name: Run tests
       run: |
         . venv/bin/activate
-        pytest tests/
+        PYTHONPATH=src pytest tests/

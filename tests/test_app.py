@@ -11,6 +11,7 @@ config_path = os.path.join(base_dir, "..", "config.json")
 # Load JSON configuration
 with open(config_path) as f:
     config = json.load(f)
+
 # Sample data for testing
 sample_form_data = {
     "name": "TestApp",
