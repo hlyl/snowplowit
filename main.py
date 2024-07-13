@@ -158,6 +158,8 @@ async def search_form_data(name: str, db: Session = Depends(get_db)):
             col.name: getattr(data, col.name) for col in DynamicModel.__table__.columns
         }
         return result
+    except HTTPException as e:
+        raise e
     except Exception as e:
         logger.error("Error searching form data: %s", str(e))
         raise HTTPException(status_code=500, detail=str(e))

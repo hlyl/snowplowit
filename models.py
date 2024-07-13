@@ -1,6 +1,6 @@
 import json
 from sqlalchemy import Column, Integer, create_engine
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.types import String, Text, Date, Boolean, JSON
 
@@ -22,7 +22,7 @@ type_mapping = {
 
 class DynamicModel(Base):
     __tablename__ = "form_data"
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
 
     # Loop through each field in the configuration
     for field in config["form"]["fields"]:
@@ -32,10 +32,10 @@ class DynamicModel(Base):
         )  # Default to String(255) if not found
 
         # Set the column as primary key if the field name is "name"
-        if field["name"].lower() == "name":
-            vars()[col_name] = Column(col_type, primary_key=True, nullable=False)
-        else:
-            vars()[col_name] = Column(col_type, nullable=True)
+        # if field["name"].lower() == "name":
+        #    vars()[col_name] = Column(col_type, primary_key=True, nullable=False)
+        # else:
+        vars()[col_name] = Column(col_type, nullable=True)
 
 
 # SQLite database URL
