@@ -1,0 +1,51 @@
+import json
+from sqlalchemy import Column, Integer, create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.types import String, Text, Date, Boolean, JSON
+
+# Load JSON configuration
+with open("config.json") as f:
+    config = json.load(f)
+
+Base = declarative_base()
+
+# Map sqlalchemy_type from string to actual SQLAlchemy types
+type_mapping = {
+    "String(255)": String(255),
+    "Text": Text,
+    "Date": Date,
+    "Boolean": Boolean,
+    "JSON": JSON,
+}
+
+
+class DynamicModel(Base):
+    __tablename__ = "form_data"
+    id = Column(Integer, primary_key=True, index=True)
+
+    # Loop through each field in the configuration
+    for field in config["form"]["fields"]:
+        col_name = field["name"].replace(" ", "_").lower()
+        col_type = type_mapping.get(
+            field.get("sqlalchemy_type"), String(255)
+        )  # Default to String(255) if not found
+
+        # Set the column as primary key if the field name is "name"
+        if field["name"].lower() == "name":
+            vars()[col_name] = Column(col_type, primary_key=True, nullable=False)
+        else:
+            vars()[col_name] = Column(col_type, nullable=True)
+
+
+# SQLite database URL
+DATABASE_URL = "sqlite:///./form_data.db"
+
+# Create the database engine
+engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+
+# Create a configured "Session" class
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+# Create all tables in the database
+Base.metadata.create_all(bind=engine)
