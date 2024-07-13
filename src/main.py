@@ -2,7 +2,7 @@ from fastapi import FastAPI, Depends, HTTPException
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 from sqlalchemy import func
-from models import DynamicModel, SessionLocal, engine
+from models import DynamicModel, SessionLocal
 from fpdf import FPDF
 from datetime import datetime
 import json
