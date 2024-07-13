@@ -35,7 +35,6 @@ jobs:
 
     - name: Run Streamlit app
       run: |
-        cd src
         . venv/bin/activate
         streamlit run src/app.py &
       env:
