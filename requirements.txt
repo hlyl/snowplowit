@@ -3,3 +3,4 @@ pytest
 sqlalchemy
 fpdf
 pydantic
+streamlit
