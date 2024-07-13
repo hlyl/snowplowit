@@ -3,8 +3,16 @@ from sqlalchemy import Column, Integer, create_engine, String, Text, Date, Boole
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
 
+
+# Get the directory of the current script
+base_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Construct the full path to the config file
+config_path = os.path.join(base_dir, "..", "config.json")
+
 # Load JSON configuration
-with open("config.json") as f:
+with open(config_path) as f:
+    # Load your configuration here
     config = json.load(f)
 
 Base = declarative_base()
