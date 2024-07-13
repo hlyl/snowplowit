@@ -1,8 +1,7 @@
 import json
-from sqlalchemy import Column, Integer, create_engine
+from sqlalchemy import Column, Integer, create_engine, String, Text, Date, Boolean, JSON
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.types import String, Text, Date, Boolean, JSON
 
 # Load JSON configuration
 with open("config.json") as f:
@@ -22,6 +21,8 @@ type_mapping = {
 
 class DynamicModel(Base):
     __tablename__ = "form_data"
+
+    # Primary key id set to auto-increment
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
 
     # Loop through each field in the configuration
@@ -31,10 +32,6 @@ class DynamicModel(Base):
             field.get("sqlalchemy_type"), String(255)
         )  # Default to String(255) if not found
 
-        # Set the column as primary key if the field name is "name"
-        # if field["name"].lower() == "name":
-        #    vars()[col_name] = Column(col_type, primary_key=True, nullable=False)
-        # else:
         vars()[col_name] = Column(col_type, nullable=True)
 
 

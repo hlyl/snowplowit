@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
-from sqlalchemy import func  # Import func from SQLAlchemy
+from sqlalchemy import func
 from models import DynamicModel, SessionLocal, engine
 from fpdf import FPDF
 from datetime import datetime
