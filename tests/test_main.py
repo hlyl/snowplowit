@@ -1,9 +1,18 @@
+import os
 import pytest
 from fastapi.testclient import TestClient
 from src.main import app, get_db
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from src.models import Base, DynamicModel
+
+# Ensure the correct path for config.json
+base_dir = os.path.dirname(os.path.abspath(__file__))
+config_path = os.path.join(base_dir, "config.json")
+
+# Load JSON configuration
+with open(config_path) as f:
+    config = json.load(f)
 
 # Create a new SQLite database for testing
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
