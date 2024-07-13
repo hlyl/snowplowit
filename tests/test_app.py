@@ -2,11 +2,15 @@ import json
 import pytest
 import requests
 import requests_mock
+import os
+
+# Ensure the correct path for config.json
+base_dir = os.path.dirname(os.path.abspath(__file__))
+config_path = os.path.join(base_dir, "..", "config.json")
 
 # Load JSON configuration
-with open("config.json") as f:
+with open(config_path) as f:
     config = json.load(f)
-
 # Sample data for testing
 sample_form_data = {
     "name": "TestApp",

@@ -8,7 +8,7 @@ from src.models import Base, DynamicModel
 
 # Ensure the correct path for config.json
 base_dir = os.path.dirname(os.path.abspath(__file__))
-config_path = os.path.join(base_dir, "config.json")
+config_path = os.path.join(base_dir, "..", "config.json")
 
 # Load JSON configuration
 with open(config_path) as f:
