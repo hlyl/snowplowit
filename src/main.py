@@ -28,7 +28,7 @@ with open(config_path) as f:
 app = FastAPI()
 
 
-# Dependency to get DB session
+# Dependency to get DB session 
 def get_db():
     db = SessionLocal()
     try:
