@@ -1,9 +1,17 @@
 import streamlit as st
 import json
 import requests
+import os
+
+# Get the current directory of the script
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Construct the path to the config.json file
+config_path = os.path.join(current_dir, "../config.json")
+
 
 # Load JSON configuration
-with open("config.json") as f:
+with open(config_path) as f:
     config = json.load(f)
 
 
@@ -12,7 +20,7 @@ def render_field(field, prefix="", value=None):
     field_name = field["name"]
     key = f"{prefix}_{field_name}"
     default_value = value if value is not None else field.get("default")
-
+    #print(key, default_value)
     if field_type == "text":
         return st.text_input(field_name, value=default_value, key=key)
     elif field_type == "textarea":
@@ -60,8 +68,7 @@ search_name = st.text_input("Search by Name")
 original_data = {}
 
 # Initialize search_data to None
-search_data = None
-
+search_data = {}
 if st.button("Search"):
     search_response = requests.get(f"http://127.0.0.1:8000/search/{search_name}")
     if search_response.status_code == 200:
@@ -71,15 +78,16 @@ if st.button("Search"):
     else:
         st.warning(f"No record found for {search_name}. You can create a new entry.")
         search_data = {"Name": search_name}  # Initialize with search name
-
+#print(search_data)
 # Render the form
 form_data = {}
 for i, field in enumerate(config["form"]["fields"]):
     form_data[field["name"]] = render_field(
         field,
         prefix=f"field_{i}",
-        value=search_data.get(field["name"]) if search_data else None,
+        value=search_data.get(field["name"]),
     )
+
 
 if st.button("Generate and Download PDF"):
     response = requests.post("http://127.0.0.1:8000/submit/", json=form_data)
