@@ -2,12 +2,12 @@ from sqlalchemy import create_engine, Column, String, Text, Boolean, JSON, Date,
 from sqlalchemy.orm import declarative_base, sessionmaker
 from app.database import Base
 from app.config import load_config
+import uuid
 
 config = load_config()
 
 # SQLAlchemy Base
 Base = declarative_base()
-
 
 # Helper function to determine column type
 def get_column_type(data_type):
@@ -22,7 +22,6 @@ def get_column_type(data_type):
     elif data_type == "Date":
         return Date
     return None
-
 
 # Function to process fields
 def process_fields(fields, attributes):
@@ -47,11 +46,10 @@ def process_fields(fields, attributes):
         else:
             print(f"Unsupported data type for field {field_name}: {data_type}")
 
-
 # Generate SQLAlchemy Model using a dictionary
 attributes = {
     "__tablename__": "applications",
-    "id": Column(Integer, primary_key=True, autoincrement=True),
+    "id": Column(String, primary_key=True, default=lambda: str(uuid.uuid4())),
 }
 
 process_fields(config["form"]["fields"], attributes)

@@ -73,8 +73,8 @@ DynamicPydanticModel = create_model(
 )
 
 # Print generated models for debugging
-# for model in models:
-#    print(model.schema_json(indent=2))
+for model in models:
+    print(model.schema_json(indent=2))
 
 # Example usage
-# print(DynamicPydanticModel.schema_json(indent=2))
+ print(DynamicPydanticModel.schema_json(indent=2))
