@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from src.routers import application
-from src.database import engine, Base
+from app.routers import application
+from app.database import engine, Base
 
 app = FastAPI()
 

@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from typing import List
-from src.database import get_db
-from src.model import Application
-from src.utils.dynamic_model import DynamicPydanticModel
+from app.database import get_db
+from app.model import Application
+from app.utils.dynamic_model import DynamicPydanticModel
 
 router = APIRouter()
 

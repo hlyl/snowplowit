@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine, Column, String, Text, Boolean, JSON, Date, Integer
 from sqlalchemy.orm import declarative_base, sessionmaker
-from src.database import Base
-from src.config import load_config
+from app.database import Base
+from app.config import load_config
 
 config = load_config()
 

@@ -2,10 +2,10 @@ import os
 import pytest
 import json
 from fastapi.testclient import TestClient
-from src.main import app, get_db
+from app.main import app, get_db
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from src.models import Base, DynamicModel
+from app.models import Base, DynamicModel
 
 # Ensure the correct path for config.json
 base_dir = os.path.dirname(os.path.abspath(__file__))

@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field, create_model
 from typing import List, Optional, Dict, Any, Type
-from src.config import load_config
+from app.config import load_config
 
 config = load_config()
 
