@@ -1,7 +1,6 @@
 fastapi
-pytest
+uvicorn
 sqlalchemy
-fpdf
 pydantic
 streamlit
-requests-mock
+requests

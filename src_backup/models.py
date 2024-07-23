@@ -18,7 +18,7 @@ with open(config_path) as f:
 
 Base = declarative_base()
 
-# Map sqlalchemy_type from string to actual SQLAlchemy types
+# Map data_type from string to actual SQLAlchemy types
 type_mapping = {
     "String(255)": String(255),
     "Text": Text,
@@ -36,9 +36,9 @@ class DynamicModel(Base):
 
     # Loop through each field in the configuration
     for field in config["form"]["fields"]:
-        col_name = field["name"].replace(" ", "_").lower()
+        col_name = field["name"]
         col_type = type_mapping.get(
-            field.get("sqlalchemy_type"), String(255)
+            field.get("data_type"), String(255)
         )  # Default to String(255) if not found
 
         vars()[col_name] = Column(col_type, nullable=True)

@@ -1,320 +1,361 @@
 {
-  "form": {
-    "fields": [
-      {
-        "name": "Name",
-        "type": "text",
-        "default": "Default Name",
-        "sqlalchemy_type": "String(255)"
-      },
-      {
-        "name": "Application Type",
-        "type": "select",
-        "options": [
-          null,
-          "SaaS",
-          "Homegrown",
-          "COTS"
-        ],
-        "default": "SaaS",
-        "sqlalchemy_type": "String(255)"
-      },
-      {
-        "name": "Description",
-        "type": "textarea",
-        "sqlalchemy_type": "Text"
-      },
-      {
-        "name": "Architecture Type",
-        "type": "select",
-        "options": [
-          "Monolithic",
-          "Microservices",
-          "Serverless"
-        ],
-        "default": "Monolithic",
-        "sqlalchemy_type": "String(255)"
-      },
-      {
-        "name": "Platform Host",
-        "type": "text",
-        "sqlalchemy_type": "Text"
-      },
-      {
-        "name": "Install type",
-        "type": "select",
-        "options": [
-          null,
-          "On Premise",
-          "Hybrid",
-          "Private Cloud",
-          "Public Cloud",
-          "Cloud",
-          "SaaS",
-          "PaaS",
-          "Third Party Hosted"
-        ],
-        "default": "SaaS",
-        "sqlalchemy_type": "String(255)"
-      },
-      {
-        "name": "Life cycle stage",
-        "type": "select",
-        "options": [
-          null,
-          "Operational"
-        ],
-        "default": "Operational",
-        "sqlalchemy_type": "String(255)"
-      },
-      {
-        "name": "Life cycle stage status",
-        "type": "select",
-        "options": [
-          null,
-          "In Use"
-        ],
-        "default": "In Use",
-        "sqlalchemy_type": "String(255)"
-      },
-      {
-        "name": "Life cycle status",
-        "type": "select",
-        "options": [
-          "Development",
-          "Operational",
-          "Retired",
-          "Non-Operational"
-        ],
-        "default": "Operational",
-        "sqlalchemy_type": "String(255)"
-      },
-      {
-        "name": "Environments",
-        "type": "multiselect",
-        "options": [
-          "Sandbox",
-          "Development",
-          "Training",
-          "Test",
-          "Validation",
-          "Production"
-        ],
-        "sqlalchemy_type": "JSON"
-      },
-      {
-        "name": "No. of users",
-        "type": "select",
-        "options": [
-          "0",
-          "0-49",
-          "50-99",
-          "100-499",
-          "500-999",
-          "1000+"
-        ],
-        "sqlalchemy_type": "String(255)"
-      },
-      {
-        "name": "Regulatory Compliance",
-        "type": "group",
+    "form": {
         "fields": [
-          {
-            "name": "Valid Assessment",
-            "type": "checkbox",
-            "default": true,
-            "sqlalchemy_type": "Boolean"
-          },
-          {
-            "name": "GxP (Healthcare)",
-            "type": "checkbox",
-            "default": true,
-            "sqlalchemy_type": "Boolean"
-          },
-          {
-            "name": "GxP data",
-            "type": "checkbox",
-            "default": false,
-            "sqlalchemy_type": "Boolean"
-          },
-          {
-            "name": "GxP signature",
-            "type": "checkbox",
-            "default": false,
-            "sqlalchemy_type": "Boolean"
-          },
-          {
-            "name": "Financial",
-            "type": "checkbox",
-            "default": true,
-            "sqlalchemy_type": "Boolean"
-          },
-          {
-            "name": "Other regulatory",
-            "type": "checkbox",
-            "default": false,
-            "sqlalchemy_type": "Boolean"
-          }
+            {
+                "default": "Default Name",
+                "display_name": "Name",
+                "field_name": "name",
+                "data_type": "String(255)",
+                "type": "text"
+            },
+            {
+                "default": "SaaS",
+                "display_name": "Application Type",
+                "field_name": "application_type",
+                "options": [
+                    null,
+                    "SaaS",
+                    "Homegrown",
+                    "COTS"
+                ],
+                "data_type": "String(255)",
+                "type": "select"
+            },
+            {
+                "display_name": "Description",
+                "field_name": "description",
+                "data_type": "Text",
+                "type": "textarea"
+            },
+            {
+                "default": "Monolithic",
+                "display_name": "Architecture Type",
+                "field_name": "architecture_type",
+                "options": [
+                    "Monolithic",
+                    "Microservices",
+                    "Serverless"
+                ],
+                "data_type": "String(255)",
+                "type": "select"
+            },
+            {
+                "display_name": "Platform Host",
+                "field_name": "platform_host",
+                "data_type": "Text",
+                "type": "text"
+            },
+            {
+                "default": "SaaS",
+                "display_name": "Install Type",
+                "field_name": "install_type",
+                "options": [
+                    null,
+                    "On Premise",
+                    "Hybrid",
+                    "Private Cloud",
+                    "Public Cloud",
+                    "Cloud",
+                    "SaaS",
+                    "PaaS",
+                    "Third Party Hosted"
+                ],
+                "data_type": "String(255)",
+                "type": "select"
+            },
+            {
+                "default": "Operational",
+                "display_name": "Life cycle stage",
+                "field_name": "life_cycle_stage",
+                "options": [
+                    null,
+                    "Operational"
+                ],
+                "data_type": "String(255)",
+                "type": "select"
+            },
+            {
+                "default": "In Use",
+                "display_name": "Life cycle stage status",
+                "field_name": "life_cycle_stage_status",
+                "options": [
+                    null,
+                    "In Use"
+                ],
+                "data_type": "String(255)",
+                "type": "select"
+            },
+            {
+                "default": "Operational",
+                "display_name": "Life cycle status",
+                "field_name": "life_cycle_status",
+                "options": [
+                    "Development",
+                    "Operational",
+                    "Retired",
+                    "Non-Operational"
+                ],
+                "data_type": "String(255)",
+                "type": "select"
+            },
+            {
+                "display_name": "Environments",
+                "field_name": "environments",
+                "options": [
+                    "Sandbox",
+                    "Development",
+                    "Training",
+                    "Test",
+                    "Validation",
+                    "Production"
+                ],
+                "data_type": "JSON",
+                "type": "multiselect"
+            },
+            {
+                "display_name": "Number of users",
+                "field_name": "number_of_users",
+                "options": [
+                    "0",
+                    "0-49",
+                    "50-99",
+                    "100-499",
+                    "500-999",
+                    "1000+"
+                ],
+                "data_type": "String(255)",
+                "type": "select"
+            },
+            {
+                "display_name": "Regulatory Compliance",
+                "field_name": "regulatory_compliance",
+                "fields": [
+                    {
+                        "default": true,
+                        "display_name": "Valid Assessment",
+                        "field_name": "valid_assessment",
+                        "data_type": "Boolean",
+                        "type": "checkbox"
+                    },
+                    {
+                        "default": true,
+                        "display_name": "GxP (Healthcare)",
+                        "field_name": "gxp_healthcare",
+                        "data_type": "Boolean",
+                        "type": "checkbox"
+                    },
+                    {
+                        "default": false,
+                        "display_name": "GxP data",
+                        "field_name": "gxp_data",
+                        "data_type": "Boolean",
+                        "type": "checkbox"
+                    },
+                    {
+                        "default": false,
+                        "display_name": "GxP signature",
+                        "field_name": "gxp_signature",
+                        "data_type": "Boolean",
+                        "type": "checkbox"
+                    },
+                    {
+                        "default": true,
+                        "display_name": "Financial",
+                        "field_name": "financial",
+                        "data_type": "Boolean",
+                        "type": "checkbox"
+                    },
+                    {
+                        "default": false,
+                        "display_name": "Other regulatory",
+                        "field_name": "other_regulatory",
+                        "data_type": "Boolean",
+                        "type": "checkbox"
+                    }
+                ],
+                "type": "group"
+            },
+            {
+                "display_name": "Recovery",
+                "field_name": "recovery",
+                "fields": [
+                    {
+                        "display_name": "RTO",
+                        "field_name": "rto",
+                        "data_type": "String(255)",
+                        "type": "text"
+                    },
+                    {
+                        "display_name": "RPO",
+                        "field_name": "rpo",
+                        "data_type": "String(255)",
+                        "type": "text"
+                    },
+                    {
+                        "display_name": "WRT",
+                        "field_name": "wrt",
+                        "data_type": "String(255)",
+                        "type": "text"
+                    }
+                ],
+                "type": "group"
+            },
+            {
+                "display_name": "Usage",
+                "field_name": "usage",
+                "fields": [
+                    {
+                        "display_name": "Process class",
+                        "field_name": "process_class",
+                        "options": [],
+                        "data_type": "String(255)",
+                        "type": "select"
+                    },
+                    {
+                        "display_name": "Organisational unit",
+                        "field_name": "organisational_unit",
+                        "options": [
+                            "Development"
+                        ],
+                        "data_type": "String(255)",
+                        "type": "select"
+                    },
+                    {
+                        "display_name": "External users",
+                        "field_name": "external_users",
+                        "options": [
+                            "Supplier",
+                            "Patients",
+                            "Informal caregivers",
+                            "General public",
+                            "Researchers",
+                            "Health Care Professionals",
+                            "Authorities",
+                            "Investor",
+                            "Customer"
+                        ],
+                        "data_type": "JSON",
+                        "type": "multiselect"
+                    }
+                ],
+                "type": "group"
+            },
+            {
+                "display_name": "Data",
+                "field_name": "data",
+                "fields": [
+                    {
+                        "display_name": "Data classification",
+                        "field_name": "data_classification",
+                        "options": [
+                            "Strictly Confidential",
+                            "Confidential",
+                            "Public",
+                            null,
+                            "Internal use"
+                        ],
+                        "data_type": "String(255)",
+                        "type": "select"
+                    },
+                    {
+                        "default": true,
+                        "display_name": "Personal Data",
+                        "field_name": "personal_data",
+                        "data_type": "Boolean",
+                        "type": "checkbox"
+                    },
+                    {
+                        "default": true,
+                        "display_name": "Personal Data is only for User login and logging of User actions?",
+                        "field_name": "personal_data_is_only_for_user_login_and_logging_of_user_actions",
+                        "data_type": "Boolean",
+                        "type": "checkbox"
+                    },
+                    {
+                        "display_name": "Personal type",
+                        "field_name": "personal_type",
+                        "options": [
+                            "Employees",
+                            "Customers",
+                            "Patients",
+                            "Health Care Professionals",
+                            "Vendor Contacts",
+                            "Clinical Trial Participants"
+                        ],
+                        "data_type": "String(255)",
+                        "type": "select"
+                    }
+                ],
+                "type": "group"
+            },
+            {
+                "display_name": "IT Solution Owner",
+                "field_name": "it_solution_owner",
+                "data_type": "String(255)",
+                "type": "text"
+            },
+            {
+                "display_name": "IT Solution Manager",
+                "field_name": "it_solution_manager",
+                "data_type": "String(255)",
+                "type": "text"
+            },
+            {
+                "display_name": "QA",
+                "field_name": "qa",
+                "data_type": "String(255)",
+                "type": "text"
+            },
+            {
+                "default": true,
+                "display_name": "Commission",
+                "field_name": "commission",
+                "data_type": "Boolean",
+                "type": "checkbox"
+            },
+            {
+                "display_name": "Decommission date",
+                "field_name": "decommission_date",
+                "data_type": "Date",
+                "type": "date"
+            },
+            {
+                "display_name": "Access Mgmt System",
+                "field_name": "access_mgmt_system",
+                "options": [
+                    "UserAR2",
+                    "novoAccess",
+                    "Other",
+                    "System Access Management (SAM)",
+                    null
+                ],
+                "data_type": "String(255)",
+                "type": "select"
+            },
+            {
+                "display_name": "Capabilities",
+                "field_name": "capabilities",
+                "data_type": "String(255)",
+                "type": "text"
+            },
+            {
+                "display_name": "Links to CIs",
+                "field_name": "links_to_cis",
+                "data_type": "String(255)",
+                "type": "text"
+            },
+            {
+                "display_name": "IT Risk Assessment",
+                "field_name": "it_risk_assessment",
+                "data_type": "String(255)",
+                "type": "text"
+            },
+            {
+                "display_name": "Impact Assessment",
+                "field_name": "impact_assessment",
+                "data_type": "String(255)",
+                "type": "text"
+            }
         ]
-      },
-      {
-        "name": "Recovery",
-        "type": "group",
-        "fields": [
-          {
-            "name": "RTO",
-            "type": "text",
-            "sqlalchemy_type": "String(255)"
-          },
-          {
-            "name": "RPO",
-            "type": "text",
-            "sqlalchemy_type": "String(255)"
-          },
-          {
-            "name": "WRT",
-            "type": "text",
-            "sqlalchemy_type": "String(255)"
-          }
-        ]
-      },
-      {
-        "name": "Usage",
-        "type": "group",
-        "fields": [
-          {
-            "name": "Process class",
-            "type": "select",
-            "options": [],
-            "sqlalchemy_type": "String(255)"
-          },
-          {
-            "name": "Organisational unit",
-            "type": "select",
-            "options": [
-              "Development"
-            ],
-            "sqlalchemy_type": "String(255)"
-          },
-          {
-            "name": "External users",
-            "type": "multiselect",
-            "options": [
-              "Supplier",
-              "Patients",
-              "Informal caregivers",
-              "General public",
-              "Researchers",
-              "Health Care Professionals",
-              "Authorities",
-              "Investor",
-              "Customer"
-            ],
-            "sqlalchemy_type": "JSON"
-          }
-        ]
-      },
-      {
-        "name": "Data",
-        "type": "group",
-        "fields": [
-          {
-            "name": "Data classification",
-            "type": "select",
-            "options": [
-              "Strictly Confidential",
-              "Confidential",
-              "Public",
-              null,
-              "Internal use"
-            ],
-            "sqlalchemy_type": "String(255)"
-          },
-          {
-            "name": "Personal Data",
-            "type": "checkbox",
-            "default": true,
-            "sqlalchemy_type": "Boolean"
-          },
-          {
-            "name": "Personal Data is only for User login and logging of User actions?",
-            "type": "checkbox",
-            "default": true,
-            "sqlalchemy_type": "Boolean"
-          },
-          {
-            "name": "Personal type",
-            "type": "select",
-            "options": [
-              "Employees",
-              "Customers",
-              "Patients",
-              "Health Care Professionals",
-              "Vendor Contacts",
-              "Clinical Trial Participants"
-            ],
-            "sqlalchemy_type": "String(255)"
-          }
-        ]
-      },
-      {
-        "name": "IT Solution Owner",
-        "type": "text",
-        "sqlalchemy_type": "String(255)"
-      },
-      {
-        "name": "IT Solution Manager",
-        "type": "text",
-        "sqlalchemy_type": "String(255)"
-      },
-      {
-        "name": "QA",
-        "type": "text",
-        "sqlalchemy_type": "String(255)"
-      },
-      {
-        "name": "Commission",
-        "type": "checkbox",
-        "default": true,
-        "sqlalchemy_type": "Boolean"
-      },
-      {
-        "name": "Decommission date",
-        "type": "date",
-        "sqlalchemy_type": "Date"
-      },
-      {
-        "name": "Access Mgmt System",
-        "type": "select",
-        "options": [
-          "UserAR2",
-          "novoAccess",
-          "Other",
-          "System Access Management (SAM)",
-          null
-        ],
-        "sqlalchemy_type": "String(255)"
-      },
-      {
-        "name": "Capabilities",
-        "type": "text",
-        "sqlalchemy_type": "String(255)"
-      },
-      {
-        "name": "Links to CIs",
-        "type": "text",
-        "sqlalchemy_type": "String(255)"
-      },
-      {
-        "name": "IT Risk Assessment",
-        "type": "text",
-        "sqlalchemy_type": "String(255)"
-      },
-      {
-        "name": "Impact Assessment",
-        "type": "text",
-        "sqlalchemy_type": "String(255)"
-      }
-    ]
-  }
+    }
 }
