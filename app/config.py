@@ -1,23 +1,15 @@
 import json
 import os
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def load_config():
-    # Get the current directory of the script
+    logger.info("Loading configuration")
     current_dir = os.path.dirname(os.path.abspath(__file__))
-
-    # Construct the path to the config.json file
-    config_path = os.path.join(current_dir, "../config.json")
-
-    # Load JSON configuration
-    try:
-        with open(config_path, "r") as config_file:
-            config = json.load(config_file)
-        print("JSON loaded successfully.")
-    except json.JSONDecodeError as e:
-        print(f"JSON decode error: {e}")
-        exit(1)
-    except Exception as e:
-        print(f"Unexpected error: {e}")
-        exit(1)
+    config_path = os.path.join(current_dir, "../config/config.json")
+    with open(config_path, "r") as f:
+        config = json.load(f)
+    logger.debug(f"Configuration loaded: {config}")
     return config
