@@ -99,6 +99,11 @@
                 "type": "select"
             },
             {
+                "default": [
+                    "Development",
+                    "Validation",
+                    "Production"
+                ],
                 "display_name": "Environments",
                 "field_name": "environments",
                 "options": [

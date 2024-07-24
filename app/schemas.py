@@ -1,12 +1,11 @@
 from pydantic import BaseModel, Field
 from typing import Optional, List
 from datetime import date
-from uuid import UUID
 
 
-class ApplicationBase(BaseModel):
+class ApplicationCreate(BaseModel):
     name: str
-    application_type: str
+    application_type: Optional[str] = None
     description: Optional[str] = None
     architecture_type: Optional[str] = None
     platform_host: Optional[str] = None
@@ -14,7 +13,7 @@ class ApplicationBase(BaseModel):
     life_cycle_stage: Optional[str] = None
     life_cycle_stage_status: Optional[str] = None
     life_cycle_status: Optional[str] = None
-    environments: Optional[dict] = None
+    environments: List[str] = Field(default=["Development", "Validation", "Production"])
     number_of_users: Optional[str] = None
     valid_assessment: Optional[bool] = None
     gxp_healthcare: Optional[bool] = None
@@ -27,7 +26,7 @@ class ApplicationBase(BaseModel):
     wrt: Optional[str] = None
     process_class: Optional[str] = None
     organisational_unit: Optional[str] = None
-    external_users: Optional[dict] = None
+    external_users: List[str] = []
     data_classification: Optional[str] = None
     personal_data: Optional[bool] = None
     personal_data_is_only_for_user_login_and_logging_of_user_actions: Optional[bool] = (
@@ -38,7 +37,7 @@ class ApplicationBase(BaseModel):
     it_solution_manager: Optional[str] = None
     qa: Optional[str] = None
     commission: Optional[bool] = None
-    decommission_date: Optional[str] = None  # Ensure this is a string
+    decommission_date: Optional[date] = None
     access_mgmt_system: Optional[str] = None
     capabilities: Optional[str] = None
     links_to_cis: Optional[str] = None
@@ -46,16 +45,12 @@ class ApplicationBase(BaseModel):
     impact_assessment: Optional[str] = None
 
 
-class ApplicationCreate(ApplicationBase):
+class ApplicationUpdate(ApplicationCreate):
     pass
 
 
-class ApplicationUpdate(ApplicationBase):
-    pass
-
-
-class ApplicationResponse(ApplicationBase):
-    id: UUID  # Ensure this is a UUID
+class ApplicationResponse(ApplicationCreate):
+    id: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True

@@ -6,9 +6,9 @@ from typing import List, Optional
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
 import os
+import datetime
 from datetime import date
-from uuid import UUID  # Add this import
-
+from uuid import UUID
 from app.database import get_db
 from app.models import Application
 from app.schemas import ApplicationCreate, ApplicationUpdate, ApplicationResponse
@@ -24,9 +24,11 @@ def create_application(application: ApplicationCreate, db: Session = Depends(get
         application_data = application.dict()
 
         # Convert decommission_date to date object if present
-        if application_data.get("decommission_date"):
-            application_data["decommission_date"] = date.fromisoformat(
-                application_data["decommission_date"]
+        if application.decommission_date:
+            application_data["decommission_date"] = (
+                application.decommission_date.isoformat()
+                if isinstance(application.decommission_date, datetime.date)
+                else application.decommission_date
             )
 
         logger.debug(f"Application data: {application_data}")

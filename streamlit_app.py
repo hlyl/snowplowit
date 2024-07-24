@@ -94,7 +94,9 @@ st.sidebar.header("Search Applications")
 search_name = st.sidebar.text_input("Enter Application Name to Search")
 search_button = st.sidebar.button("Search")
 
-application_data = None
+# Initialize application_data as a session state
+if "application_data" not in st.session_state:
+    st.session_state.application_data = None
 
 if search_button:
     logger.info(f"Searching for application with name: {search_name}")
@@ -107,8 +109,8 @@ if search_button:
             applications = response.json()
             if applications:
                 st.sidebar.success("Application found!")
-                application_data = applications[0]
-                logger.info(f"Application found: {application_data}")
+                st.session_state.application_data = applications[0]
+                logger.info(f"Application found: {st.session_state.application_data}")
             else:
                 st.sidebar.error("No applications found.")
                 logger.info("No applications found.")
@@ -122,7 +124,9 @@ if search_button:
 # Main Page
 st.header("Application Form")
 with st.form(key="application_form"):
-    form_data = process_fields(config["form"]["fields"], application_data)
+    form_data = process_fields(
+        config["form"]["fields"], st.session_state.application_data
+    )
 
     # Submit button within the form
     submit_button = st.form_submit_button(label="Submit")
@@ -159,9 +163,10 @@ with st.form(key="application_form"):
         logger.debug(f"Converted data to be submitted: {form_data}")
         st.write("Converted data to be submitted:", form_data)
 
-        if application_data:
+        if st.session_state.application_data:
             response = requests.put(
-                f"{API_URL}/applications/{application_data['id']}", json=form_data
+                f"{API_URL}/applications/{st.session_state.application_data['id']}",
+                json=form_data,
             )
         else:
             response = requests.post(f"{API_URL}/applications/", json=form_data)
@@ -173,38 +178,51 @@ with st.form(key="application_form"):
         if response.status_code == 200:
             st.success(
                 "Entry added successfully!"
-                if not application_data
+                if not st.session_state.application_data
                 else "Entry updated successfully!"
             )
+            st.session_state.application_data = response.json()
             logger.info("Entry added/updated successfully")
         else:
             st.error(
-                "Error adding entry" if not application_data else "Error updating entry"
+                "Error adding entry"
+                if not st.session_state.application_data
+                else "Error updating entry"
             )
             logger.error(f"Error adding/updating entry: {response.status_code}")
 
-    if generate_pdf_button and application_data:
-        # Trigger PDF generation
-        logger.info(f"Generating PDF for application ID: {application_data['id']}")
-        pdf_response = requests.get(
-            f"{API_URL}/applications/pdf/{application_data['id']}"
-        )
-        logger.debug(f"PDF generation response: {pdf_response.status_code}")
-        if pdf_response.status_code == 200:
-            # Save PDF to a temporary file
-            with open(f"/tmp/{application_data['id']}.pdf", "wb") as f:
-                f.write(pdf_response.content)
-            st.success("PDF generated successfully!")
-            st.download_button(
-                "Download PDF",
-                data=open(f"/tmp/{application_data['id']}.pdf", "rb"),
-                file_name=f"{application_data['id']}.pdf",
-                mime="application/pdf",
+    if generate_pdf_button:
+        logger.info(f"Generate PDF button pressed")
+        if st.session_state.application_data:
+            logger.info(
+                f"Generating PDF for application ID: {st.session_state.application_data['id']}"
             )
-            logger.info("PDF generated and download link provided")
+            pdf_response = requests.get(
+                f"{API_URL}/applications/pdf/{st.session_state.application_data['id']}"
+            )
+            logger.debug(f"PDF generation response: {pdf_response.status_code}")
+            if pdf_response.status_code == 200:
+                # Save PDF to a temporary file
+                with open(
+                    f"/tmp/{st.session_state.application_data['id']}.pdf", "wb"
+                ) as f:
+                    f.write(pdf_response.content)
+                st.success("PDF generated successfully!")
+                st.download_button(
+                    "Download PDF",
+                    data=open(
+                        f"/tmp/{st.session_state.application_data['id']}.pdf", "rb"
+                    ),
+                    file_name=f"{st.session_state.application_data['id']}.pdf",
+                    mime="application/pdf",
+                )
+                logger.info("PDF generated and download link provided")
+            else:
+                st.error("Error generating PDF")
+                logger.error(f"Error generating PDF: {pdf_response.status_code}")
         else:
-            st.error("Error generating PDF")
-            logger.error(f"Error generating PDF: {pdf_response.status_code}")
+            logger.warning("No application data available for PDF generation")
+            st.error("No application data available for PDF generation")
 
 # Display all entries
 st.header("All Entries")

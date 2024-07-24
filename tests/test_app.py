@@ -1,98 +1,132 @@
-import json
 import pytest
-import requests
-import requests_mock
-import os
+from fastapi.testclient import TestClient
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from app.main import app
+from app.database import Base, get_db
+from app.models import Application
+from app.schemas import ApplicationCreate
 
-# Ensure the correct path for config.json
-base_dir = os.path.dirname(os.path.abspath(__file__))
-config_path = os.path.join(base_dir, "..", "config.json")
-
-# Load JSON configuration
-with open(config_path) as f:
-    config = json.load(f)
-
-# Sample data for testing
-sample_form_data = {
-    "name": "TestApp",
-    "application_type": "SaaS",
-    "description": "This is a test application.",
-    "architecture_type": "Monolithic",
-    "platform_host": "TestHost",
-    "install_type": "On Premise",
-    "life_cycle_stage": "Operational",
-    "life_cycle_stage_status": "In Use",
-    "life_cycle_status": "Active",
-    "environments": ["Development", "Validation", "Production"],
-    "no._of_users": "100-499",
-    "regulatory_compliance": {
-        "Valid Assessment": True,
-        "GxP (Healthcare)": True,
-        "GxP data": True,
-        "GxP signature": False,
-        "Financial": True,
-        "Other regulatory": False,
-    },
-    "recovery": {"RTO": "7", "RPO": "7", "WRT": None},
-    "data": {
-        "Process class": None,
-        "Organisational unit": "Development",
-        "External users": [],
-    },
-    "it_solution_owner": "Owner Name",
-    "it_solution_manager": "Manager Name",
-    "qa": "QA Details",
-    "commission": True,
-    "decommission_date": None,
-    "access_mgmt_system": ["System1", "System2"],
-    "capabilities": "Sample capabilities",
-    "links_to_cis": "Link to CI",
-    "it_risk_assessment": "Risk assessment details",
-    "impact_assessment": "Impact assessment details",
-}
+# Create a test database
+SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
+engine = create_engine(
+    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
+)
+TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
-@pytest.fixture
-def mock_requests(requests_mock):
-    # Mock the search request
-    requests_mock.get("http://127.0.0.1:8000/search/TestApp", json=sample_form_data)
-    requests_mock.get(
-        "http://127.0.0.1:8000/search/NonexistentApp",
-        status_code=404,
-        json={"detail": "Record not found"},
-    )
-
-    # Mock the submit request
-    requests_mock.post(
-        "http://127.0.0.1:8000/submit/",
-        status_code=200,
-        json={"message": "Form data submitted successfully!"},
-    )
-
-    # Mock the download request
-    requests_mock.get(
-        "http://127.0.0.1:8000/download/", content=b"PDF content", status_code=200
-    )
+# Override the get_db dependency
+def override_get_db():
+    try:
+        db = TestingSessionLocal()
+        yield db
+    finally:
+        db.close()
 
 
-def test_search_existing(mock_requests):
-    response = requests.get("http://127.0.0.1:8000/search/TestApp")
+app.dependency_overrides[get_db] = override_get_db
+
+
+@pytest.fixture(scope="module")
+def client():
+    Base.metadata.create_all(bind=engine)
+    yield TestClient(app)
+    Base.metadata.drop_all(bind=engine)
+
+
+def test_create_application(client):
+    application_data = {
+        "name": "Test Application",
+        "application_type": "SaaS",
+        "description": "A test application",
+        "architecture_type": "Monolithic",
+        "install_type": "SaaS",
+        "life_cycle_stage": "Operational",
+        "life_cycle_stage_status": "In Use",
+        "life_cycle_status": "Operational",
+        "environments": ["Development", "Validation", "Production"],
+        "number_of_users": "100",
+        "valid_assessment": True,
+        "gxp_healthcare": True,
+        "gxp_data": False,
+        "gxp_signature": False,
+        "financial": True,
+        "other_regulatory": False,
+        "process_class": "Test Class",
+        "organisational_unit": "Test Unit",
+        "external_users": ["External User"],
+        "data_classification": "Confidential",
+        "personal_data": True,
+        "personal_data_is_only_for_user_login_and_logging_of_user_actions": True,
+        "personal_type": "Employees",
+        "it_solution_owner": "Owner",
+        "it_solution_manager": "Manager",
+        "qa": "QA",
+        "commission": True,
+        "decommission_date": "2025-01-01",
+        "access_mgmt_system": "AMS",
+        "capabilities": "Capabilities",
+        "links_to_cis": "Links",
+        "it_risk_assessment": "Risk Assessment",
+        "impact_assessment": "Impact Assessment",
+    }
+    response = client.post("/applications/", json=application_data)
     assert response.status_code == 200
-    data = response.json()
-    assert data["name"] == "TestApp"
+    assert response.json()["name"] == "Test Application"
 
 
-def test_search_non_existing(mock_requests):
-    response = requests.get("http://127.0.0.1:8000/search/NonexistentApp")
-    assert response.status_code == 404
-
-
-def test_submit_form(mock_requests):
-    response = requests.post("http://127.0.0.1:8000/submit/", json=sample_form_data)
+def test_read_applications(client):
+    response = client.get("/applications/")
     assert response.status_code == 200
+    applications = response.json()
+    assert len(applications) > 0
+    assert applications[0]["name"] == "Test Application"
 
 
-def test_download_pdf(mock_requests):
-    response = requests.get("http://127.0.0.1:8000/download/")
+def test_update_application(client):
+    # First create an application
+    application_data = {
+        "name": "Test Application",
+        "application_type": "SaaS",
+        "description": "A test application",
+        "architecture_type": "Monolithic",
+        "install_type": "SaaS",
+        "life_cycle_stage": "Operational",
+        "life_cycle_stage_status": "In Use",
+        "life_cycle_status": "Operational",
+        "environments": ["Development", "Validation", "Production"],
+        "number_of_users": "100",
+        "valid_assessment": True,
+        "gxp_healthcare": True,
+        "gxp_data": False,
+        "gxp_signature": False,
+        "financial": True,
+        "other_regulatory": False,
+        "process_class": "Test Class",
+        "organisational_unit": "Test Unit",
+        "external_users": ["External User"],
+        "data_classification": "Confidential",
+        "personal_data": True,
+        "personal_data_is_only_for_user_login_and_logging_of_user_actions": True,
+        "personal_type": "Employees",
+        "it_solution_owner": "Owner",
+        "it_solution_manager": "Manager",
+        "qa": "QA",
+        "commission": True,
+        "decommission_date": "2025-01-01",
+        "access_mgmt_system": "AMS",
+        "capabilities": "Capabilities",
+        "links_to_cis": "Links",
+        "it_risk_assessment": "Risk Assessment",
+        "impact_assessment": "Impact Assessment",
+    }
+    response = client.post("/applications/", json=application_data)
     assert response.status_code == 200
-    assert response.content == b"PDF content"
+    app_id = response.json()["id"]
+
+    # Update the application
+    update_data = {"name": "Updated Application", "application_type": "PaaS"}
+    response = client.put(f"/applications/{app_id}", json=update_data)
+    assert response.status_code == 200
+    assert response.json()["name"] == "Updated Application"
+    assert response.json()["application_type"] == "PaaS"
