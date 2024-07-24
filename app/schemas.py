@@ -1,56 +1,86 @@
-from pydantic import BaseModel, Field
-from typing import Optional, List
+from pydantic import BaseModel, Field, ConfigDict
+from typing import List, Optional
 from datetime import date
 
 
 class ApplicationCreate(BaseModel):
     name: str
-    application_type: Optional[str] = None
+    application_type: str
     description: Optional[str] = None
-    architecture_type: Optional[str] = None
+    architecture_type: str
     platform_host: Optional[str] = None
-    install_type: Optional[str] = None
-    life_cycle_stage: Optional[str] = None
-    life_cycle_stage_status: Optional[str] = None
-    life_cycle_status: Optional[str] = None
-    environments: List[str] = Field(default=["Development", "Validation", "Production"])
-    number_of_users: Optional[str] = None
-    valid_assessment: Optional[bool] = None
-    gxp_healthcare: Optional[bool] = None
-    gxp_data: Optional[bool] = None
-    gxp_signature: Optional[bool] = None
-    financial: Optional[bool] = None
-    other_regulatory: Optional[bool] = None
-    rto: Optional[str] = None
-    rpo: Optional[str] = None
-    wrt: Optional[str] = None
-    process_class: Optional[str] = None
-    organisational_unit: Optional[str] = None
-    external_users: List[str] = []
-    data_classification: Optional[str] = None
-    personal_data: Optional[bool] = None
-    personal_data_is_only_for_user_login_and_logging_of_user_actions: Optional[bool] = (
-        None
-    )
-    personal_type: Optional[str] = None
-    it_solution_owner: Optional[str] = None
-    it_solution_manager: Optional[str] = None
-    qa: Optional[str] = None
-    commission: Optional[bool] = None
+    install_type: str
+    life_cycle_stage: str
+    life_cycle_stage_status: str
+    life_cycle_status: str
+    environments: List[str]
+    number_of_users: str
+    valid_assessment: bool
+    gxp_healthcare: bool
+    gxp_data: bool
+    gxp_signature: bool
+    financial: bool
+    other_regulatory: bool
+    process_class: str
+    organisational_unit: str
+    external_users: List[str]
+    data_classification: str
+    personal_data: bool
+    personal_data_is_only_for_user_login_and_logging_of_user_actions: bool
+    personal_type: str
+    it_solution_owner: str
+    it_solution_manager: str
+    qa: str
+    commission: bool
     decommission_date: Optional[date] = None
-    access_mgmt_system: Optional[str] = None
-    capabilities: Optional[str] = None
-    links_to_cis: Optional[str] = None
-    it_risk_assessment: Optional[str] = None
-    impact_assessment: Optional[str] = None
+    access_mgmt_system: str
+    capabilities: str
+    links_to_cis: str
+    it_risk_assessment: str
+    impact_assessment: str
+
+    model_config = ConfigDict(from_attributes=True)
 
 
 class ApplicationUpdate(ApplicationCreate):
     pass
 
 
-class ApplicationResponse(ApplicationCreate):
+class ApplicationResponse(BaseModel):
     id: str
+    name: str
+    application_type: str
+    description: Optional[str] = None
+    architecture_type: str
+    platform_host: Optional[str] = None
+    install_type: str
+    life_cycle_stage: str
+    life_cycle_stage_status: str
+    life_cycle_status: str
+    environments: List[str]
+    number_of_users: str
+    valid_assessment: bool
+    gxp_healthcare: bool
+    gxp_data: bool
+    gxp_signature: bool
+    financial: bool
+    other_regulatory: bool
+    process_class: str
+    organisational_unit: str
+    external_users: List[str]
+    data_classification: str
+    personal_data: bool
+    personal_data_is_only_for_user_login_and_logging_of_user_actions: bool
+    personal_type: str
+    it_solution_owner: str
+    it_solution_manager: str
+    qa: str
+    commission: bool
+    decommission_date: Optional[date] = None
+    access_mgmt_system: str
+    capabilities: str
+    links_to_cis: str
+    it_risk_assessment: str
+    impact_assessment: str
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)

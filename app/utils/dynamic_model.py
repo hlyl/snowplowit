@@ -1,6 +1,7 @@
-from pydantic import BaseModel, Field, create_model
-from typing import List, Optional, Dict, Any, Type
+from pydantic import BaseModel, Field, create_model, field_validator
+from typing import List, Dict, Any, Type, Union
 from app.config import load_config
+from app.utils.utils import handle_date
 
 config = load_config()
 
@@ -15,12 +16,17 @@ def get_field_type(data_type: str, field_default: Any) -> Any:
     elif data_type == "JSON":
         return (Dict[str, Any], Field(default=field_default))
     elif data_type == "Date":
-        return (str, Field(default=field_default))  # Date handling can be customized
+        return (
+            str,
+            Field(default=field_default),
+        )  # Date handling will be customized with a validator
     return None
 
 
 def create_pydantic_model(name: str, fields: List[Dict[str, Any]]) -> Type[BaseModel]:
     pydantic_fields = {}
+    validators = {}
+
     for field in fields:
         field_name = field["field_name"]
         data_type = field["data_type"]
@@ -29,10 +35,22 @@ def create_pydantic_model(name: str, fields: List[Dict[str, Any]]) -> Type[BaseM
         field_type = get_field_type(data_type, field_default)
         if field_type:
             pydantic_fields[field_name] = field_type
+            if data_type == "Date":
+                # Add a validator for date fields
+                validators[field_name] = field_validator(field_name, pre=True)(
+                    handle_date
+                )
         else:
             print(f"Unsupported data type for field {field_name}: {data_type}")
 
-    return create_model(name, **pydantic_fields)
+    # Create model with validators
+    model = create_model(name, **pydantic_fields)
+
+    # Add validators to the model
+    for field_name, validator_func in validators.items():
+        setattr(model, f"_{field_name}_validator", validator_func)
+
+    return model
 
 
 def process_fields(fields: List[Dict[str, Any]]) -> List[Type[BaseModel]]:
@@ -74,7 +92,7 @@ DynamicPydanticModel = create_model(
 
 # Print generated models for debugging
 for model in models:
-    print(model.schema_json(indent=2))
+    print(model.model_json_schema(indent=2))
 
 # Example usage
- print(DynamicPydanticModel.schema_json(indent=2))
+print(DynamicPydanticModel.schema_json(indent=2))

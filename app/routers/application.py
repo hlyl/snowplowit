@@ -6,12 +6,11 @@ from typing import List, Optional
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
 import os
-import datetime
-from datetime import date
 from uuid import UUID
 from app.database import get_db
 from app.models import Application
 from app.schemas import ApplicationCreate, ApplicationUpdate, ApplicationResponse
+from app.utils.utils import handle_date
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -21,14 +20,12 @@ logger = logging.getLogger(__name__)
 def create_application(application: ApplicationCreate, db: Session = Depends(get_db)):
     try:
         logger.info("Creating new application")
-        application_data = application.dict()
+        application_data = application.model_dump()
 
-        # Convert decommission_date to date object if present
+        # Handle decommission_date using handle_date function
         if application.decommission_date:
-            application_data["decommission_date"] = (
-                application.decommission_date.isoformat()
-                if isinstance(application.decommission_date, datetime.date)
-                else application.decommission_date
+            application_data["decommission_date"] = handle_date(
+                application.decommission_date
             )
 
         logger.debug(f"Application data: {application_data}")
@@ -37,7 +34,11 @@ def create_application(application: ApplicationCreate, db: Session = Depends(get
         db.commit()
         db.refresh(new_application)
         logger.info("New application created")
-        return new_application.to_dict()
+
+        application_dict = new_application.to_dict()
+        application_dict["id"] = str(new_application.id)  # Ensure the id is a string
+
+        return ApplicationResponse(**application_dict)
     except Exception as e:
         logger.error(f"Error creating application: {e}")
         raise HTTPException(status_code=500, detail="Internal Server Error")
@@ -54,7 +55,12 @@ def read_applications(name: Optional[str] = None, db: Session = Depends(get_db))
         else:
             applications = db.query(Application).all()
         logger.debug(f"Applications found: {applications}")
-        return [app.to_dict() for app in applications]
+        application_responses = []
+        for app in applications:
+            app_dict = app.to_dict()
+            app_dict["id"] = str(app.id)  # Ensure the id is a string
+            application_responses.append(ApplicationResponse(**app_dict))
+        return application_responses
     except Exception as e:
         logger.error(f"Error reading applications: {e}")
         raise HTTPException(status_code=500, detail="Internal Server Error")
@@ -73,11 +79,11 @@ def update_application(
             logger.error(f"Application with ID {app_id} not found")
             raise HTTPException(status_code=404, detail="Application not found")
 
-        update_data = application.dict()
+        update_data = application.model_dump()
 
-        # Convert decommission_date to date object if present
+        # Handle decommission_date using handle_date function
         if update_data.get("decommission_date"):
-            update_data["decommission_date"] = date.fromisoformat(
+            update_data["decommission_date"] = handle_date(
                 update_data["decommission_date"]
             )
 
@@ -87,7 +93,13 @@ def update_application(
         db.commit()
         db.refresh(existing_application)
         logger.info(f"Application with ID {app_id} updated")
-        return existing_application.to_dict()
+
+        application_dict = existing_application.to_dict()
+        application_dict["id"] = str(
+            existing_application.id
+        )  # Ensure the id is a string
+
+        return ApplicationResponse(**application_dict)
     except Exception as e:
         logger.error(f"Error updating application: {e}")
         raise HTTPException(status_code=500, detail="Internal Server Error")
